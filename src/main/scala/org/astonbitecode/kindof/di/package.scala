@@ -12,8 +12,8 @@ import scala.concurrent.Future
 package object di {
   private[di] val constructors = new HashMap[Class[_], Constructor]
   private[di] val singletons = new HashMap[Class[_], Any]
-  private[di] val as = ActorSystem()
-  private[di] val syncActor = as.actorOf(SyncActor.props(constructors, singletons))
+  private val as = ActorSystem()
+  private val syncActor = as.actorOf(SyncActor.props(constructors, singletons))
 
   private def key[T](implicit classTag: ClassTag[T]): Class[_] = classTag.runtimeClass
 
@@ -49,14 +49,14 @@ package object di {
   }
 
   private[di] def createSingleton[T: ClassTag](k: Class[_]): T = {
-    val constructor = constructors.get(k).getOrElse(throw new RuntimeException("The service is not yet initialized"))
+    val constructor = constructors.get(k).getOrElse(throw new RuntimeException(s"No constructor found for $k"))
     val inst = constructor.apply()
     syncActor ! AddSingleton(k, inst)
     inst.asInstanceOf[T]
   }
 
   private[di] def createPrototype[T: ClassTag](k: Class[_]): T = {
-    val constructor = constructors.get(k).getOrElse(throw new RuntimeException("The service is not yet initialized"))
+    val constructor = constructors.get(k).getOrElse(throw new RuntimeException(s"No constructor found for $k"))
     val inst = constructor.apply()
     inst.asInstanceOf[T]
   }

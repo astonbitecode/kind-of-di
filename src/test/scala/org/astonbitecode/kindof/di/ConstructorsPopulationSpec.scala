@@ -1,17 +1,15 @@
 package org.astonbitecode.kindof.di
 
-import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
-import org.specs2._
-import scala.reflect.ClassTag
-import org.astonbitecode.kindof.di._
+import java.util.concurrent.TimeUnit
 import scala.concurrent.Await
 import scala.concurrent.duration.FiniteDuration
-import java.util.concurrent.TimeUnit
+import org.junit.runner.RunWith
+import org.specs2.mutable
+import org.specs2.runner.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class ConstructorsPopulationSpec extends mutable.Specification {
-  private val timeout = FiniteDuration(1000, TimeUnit.MILLISECONDS)
+  val timeout = FiniteDuration(1000, TimeUnit.MILLISECONDS)
 
   sequential
 
