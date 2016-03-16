@@ -10,76 +10,77 @@ import scala.concurrent.Promise
 import scala.concurrent.Future
 
 package object di {
-  private[di] val constructors = new HashMap[Class[_], Constructor]
-  private[di] val singletons = new HashMap[Class[_], Any]
+  private[di] val cache = new HashMap[Class[_], DiElement]
   private val as = ActorSystem()
-  private val syncActor = as.actorOf(SyncActor.props(constructors, singletons))
+  private val syncActor = as.actorOf(SyncActor.props(cache))
 
   private def key[T](implicit classTag: ClassTag[T]): Class[_] = classTag.runtimeClass
 
   /**
    * Defines a constructor for a Class. Every time that the DI wants to create a new instance, it will use the constructor defined here
    * @param constructor A Function that takes no arguments and returns an instance of a Class
+   * @param scope The scope that the Objects of the Class will be created for
    */
-  def defineConstructor[T: ClassTag](constructor: () => T): Future[Unit] = {
+  def defineConstructor[T: ClassTag](constructor: () => T, scope: DIScope.value = DIScope.SINGLETON): Future[Unit] = {
     val p = Promise[Unit]
-    syncActor ! Add(key[T], constructor, p)
+    syncActor ! Add(key[T], DiElement(constructor, scope), p)
     p.future
   }
 
   def inject[T: ClassTag](): T = {
     val k = key[T]
-    singletons.get(k) match {
-      case Some(inst) => inst.asInstanceOf[T]
-      case None => createSingleton(k)
+    cache.get(k) match {
+      case Some(diElement) => getOrCreateInstance(k)
+      case None => throw new RuntimeException(s"No constructor found for $k")
     }
   }
 
-  def inject[T: ClassTag](scope: DIScope.value): T = {
-    val k = key[T]
-    scope match {
+  private[di] def getOrCreateInstance[T: ClassTag](k: Class[_]): T = {
+    val diElement = cache.get(k).getOrElse(throw new RuntimeException(s"No constructor found for $k"))
+    val inst = diElement.scope match {
+      case DIScope.PROTOTYPE => diElement.constructor.apply()
       case DIScope.SINGLETON => {
-        singletons.get(k) match {
-          case Some(inst) => inst.asInstanceOf[T]
-          case None => createSingleton(k)
+        diElement.cachedInstance match {
+          case Some(i) => i
+          case None => {
+            val i = diElement.constructor.apply()
+            syncActor ! AddSingleton(k, i)
+            i
+          }
         }
       }
-      case DIScope.PROTOTYPE => createPrototype(k)
     }
-  }
 
-  private[di] def createSingleton[T: ClassTag](k: Class[_]): T = {
-    val constructor = constructors.get(k).getOrElse(throw new RuntimeException(s"No constructor found for $k"))
-    val inst = constructor.apply()
-    syncActor ! AddSingleton(k, inst)
     inst.asInstanceOf[T]
   }
 
-  private[di] def createPrototype[T: ClassTag](k: Class[_]): T = {
-    val constructor = constructors.get(k).getOrElse(throw new RuntimeException(s"No constructor found for $k"))
-    val inst = constructor.apply()
-    inst.asInstanceOf[T]
-  }
-
-  private[di] class SyncActor(constructors: HashMap[Class[_], Constructor], singletons: HashMap[Class[_], Any]) extends Actor {
+  private class SyncActor(c: HashMap[Class[_], DiElement]) extends Actor {
     override def receive: Receive = {
       case Add(k, v, p) => {
-        constructors.put(k, v)
+        val m = c.put(k, v)
+        c.put(k, v)
         p.success()
       }
-      case AddSingleton(k, v) => singletons.put(k, v)
+      case AddSingleton(k, v) => {
+        val diElement = c.getOrElse(k, throw new RuntimeException(s"No constructor found for $k"))
+        val newDiElement = diElement.copy(cachedInstance = Some(v))
+        c.put(k, newDiElement)
+      }
     }
   }
 
-  private[di] object SyncActor {
-    def props(c: HashMap[Class[_], Constructor], s: HashMap[Class[_], Any]): Props = Props(new SyncActor(c, s))
+  private object SyncActor {
+    def props(de: HashMap[Class[_], DiElement]): Props = Props(new SyncActor(de))
   }
 
-  private[di]type Constructor = () => Any
+  private type Constructor = () => Any
+
+  private[di] case class DiElement(constructor: Constructor, scope: DIScope.value, cachedInstance: Option[Any] = None)
 
   /**
    * Internal API: Add
    */
-  private[di] case class Add(c: Class[_], constructor: Constructor, promise: Promise[Unit])
-  private[di] case class AddSingleton(c: Class[_], instance: Any)
+  private case class Add(c: Class[_], element: DiElement, promise: Promise[Unit])
+  private case class AddSingleton(c: Class[_], instance: Any)
+
 }

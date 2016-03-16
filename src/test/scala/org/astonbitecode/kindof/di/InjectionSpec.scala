@@ -6,12 +6,15 @@ import org.junit.runner.RunWith
 import org.specs2.mutable
 import org.specs2.runner.JUnitRunner
 import scala.concurrent.Await
+import org.specs2.specification.BeforeEach
 
 @RunWith(classOf[JUnitRunner])
-class InjectionSpec extends mutable.Specification {
+class InjectionSpec extends mutable.Specification with BeforeEach {
   val timeout = FiniteDuration(1000, TimeUnit.MILLISECONDS)
 
-  sequential
+  override def before() {
+    TestUtil.clean
+  }
 
   "A spec for the Injections".txt
 
@@ -33,11 +36,11 @@ class InjectionSpec extends mutable.Specification {
     }
 
     "should happen when the user code defines it so" >> {
-      val f = defineConstructor { () => MyInjectableClass("I am a Singleton") }
+      val f = defineConstructor(() => MyInjectableClass("I am a Singleton"), DIScope.SINGLETON)
       Await.result(f, timeout)
 
       class MyClassWithSingleton {
-        val mic = inject[MyInjectableClass](scope = DIScope.SINGLETON)
+        val mic = inject[MyInjectableClass]
       }
 
       val m1 = new MyClassWithSingleton
@@ -51,11 +54,11 @@ class InjectionSpec extends mutable.Specification {
 
   "Prototype Injections" >> {
     "should happen when the user code defines it so" >> {
-      val f = defineConstructor { () => MyInjectableClass("I am a Prototype" + System.nanoTime) }
+      val f = defineConstructor(() => MyInjectableClass("I am a Prototype " + System.nanoTime), DIScope.PROTOTYPE)
       Await.result(f, timeout)
 
       class MyClassWithPrototype {
-        val mic = inject[MyInjectableClass](scope = DIScope.PROTOTYPE)
+        val mic = inject[MyInjectableClass]
       }
 
       var prevId = "Empty"
