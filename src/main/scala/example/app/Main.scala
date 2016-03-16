@@ -1,6 +1,6 @@
 package example.app
 
-import org.astonbitecode.kindof.di.defineConstructor
+import org.astonbitecode.kindof.di.diDefine
 import org.astonbitecode.kindof.di.inject
 import example.logic.{ AnotherHalpfulClass, HelpfulClass }
 import example.service.ConfigurationService
@@ -15,16 +15,16 @@ object MyMain extends App {
 
   // Initialize services and classes (like the DI framework would do)
   def c() = new ConfigurationService("/my/path")
-  defineConstructor(c)
+  diDefine(c)
   def hc() = new HelpfulClass
-  defineConstructor(hc)
+  diDefine(hc)
 
   // Run the application (2)
   new UseCase().execute
 
   // Try to re-initialize the service (3)
   try {
-    defineConstructor(() => new ConfigurationService("/my/other/path"))
+    diDefine(() => new ConfigurationService("/my/other/path"))
   } catch {
     case error: Exception => println(error.getMessage)
   }

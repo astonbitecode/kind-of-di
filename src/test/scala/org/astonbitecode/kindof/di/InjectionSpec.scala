@@ -22,7 +22,7 @@ class InjectionSpec extends mutable.Specification with BeforeEach {
 
   "Singleton Injections" >> {
     "should be the default" >> {
-      val f = defineConstructor { () => MyInjectableClass("I am a Singleton") }
+      val f = diDefine { () => MyInjectableClass("I am a Singleton") }
       Await.result(f, timeout)
 
       class MyClassWithSingleton {
@@ -38,7 +38,7 @@ class InjectionSpec extends mutable.Specification with BeforeEach {
     }
 
     "should happen when the user code defines a SINGLETON_EAGER scope" >> {
-      val f = defineConstructor(() => MyInjectableClass("I am a Singleton"), DIScope.SINGLETON_EAGER)
+      val f = diDefine(() => MyInjectableClass("I am a Singleton"), DIScope.SINGLETON_EAGER)
       Await.result(f, timeout)
 
       class MyClassWithSingleton {
@@ -54,7 +54,7 @@ class InjectionSpec extends mutable.Specification with BeforeEach {
     }
 
     "should happen when the user code defines a SINGLETON_LAZY scope" >> {
-      val f = defineConstructor(() => MyInjectableClass("I am a Singleton"), DIScope.SINGLETON_LAZY)
+      val f = diDefine(() => MyInjectableClass("I am a Singleton"), DIScope.SINGLETON_LAZY)
       Await.result(f, timeout)
 
       class MyClassWithSingleton {
@@ -72,7 +72,7 @@ class InjectionSpec extends mutable.Specification with BeforeEach {
 
   "Prototype Injections" >> {
     "should happen when the user code defines it so" >> {
-      val f = defineConstructor(() => MyInjectableClass("I am a Prototype " + System.nanoTime), DIScope.PROTOTYPE)
+      val f = diDefine(() => MyInjectableClass("I am a Prototype " + System.nanoTime), DIScope.PROTOTYPE)
       Await.result(f, timeout)
 
       class MyClassWithPrototype {

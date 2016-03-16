@@ -21,29 +21,29 @@ class ConstructorsPopulationSpec extends mutable.Specification with BeforeEach {
   "A spec for the Constructors population in the DI ".txt
 
   "A constructor should be populated in the DI" >> {
-    val f = defineConstructor { () => MyInjectableClass("One") }
+    val f = diDefine { () => MyInjectableClass("One") }
     Await.result(f, timeout)
     cache must haveSize(1)
   }
 
   "A constructor should be replaced in the DI if it already exists" >> {
-    val f1 = defineConstructor { () => MyInjectableClass("One") }
+    val f1 = diDefine { () => MyInjectableClass("One") }
     Await.result(f1, timeout)
-    val f2 = defineConstructor { () => MyInjectableClass("Two") }
+    val f2 = diDefine { () => MyInjectableClass("Two") }
     Await.result(f2, timeout)
     cache must haveSize(1)
     cache.head._2.constructor.apply().asInstanceOf[MyInjectableClass].id === "Two"
   }
 
   "A constructor with scope SINGLETON_EAGER should create the instance upon the call" >> {
-    val f = defineConstructor(() => MyInjectableClass("One"), DIScope.SINGLETON_EAGER)
+    val f = diDefine(() => MyInjectableClass("One"), DIScope.SINGLETON_EAGER)
     Await.result(f, timeout)
     cache must haveSize(1)
     cache.head._2.cachedInstance.isDefined === true
   }
 
   "A constructor with scope SINGLETON_LAZY should not create the instance upon the call" >> {
-    val f = defineConstructor(() => MyInjectableClass("One"), DIScope.SINGLETON_LAZY)
+    val f = diDefine(() => MyInjectableClass("One"), DIScope.SINGLETON_LAZY)
     Await.result(f, timeout)
     cache must haveSize(1)
     cache.head._2.cachedInstance.isDefined === false

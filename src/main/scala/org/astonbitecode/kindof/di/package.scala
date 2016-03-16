@@ -21,7 +21,7 @@ package object di {
    * @param constructor A Function that takes no arguments and returns an instance of a Class
    * @param scope The scope that the Objects of the Class will be created for
    */
-  def defineConstructor[T: ClassTag](constructor: () => T, scope: DIScope.value = DIScope.SINGLETON_EAGER): Future[Unit] = {
+  def diDefine[T: ClassTag](constructor: () => T, scope: DIScope.value = DIScope.SINGLETON_EAGER): Future[Unit] = {
     val p = Promise[Unit]
     syncActor ! Add(key[T], DiElement(constructor, scope), p)
     p.future
