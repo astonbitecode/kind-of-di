@@ -21,7 +21,7 @@ package object di {
    * @param constructor A Function that takes no arguments and returns an instance of a Class
    * @param scope The scope that the Objects of the Class will be created for
    */
-  def defineConstructor[T: ClassTag](constructor: () => T, scope: DIScope.value = DIScope.SINGLETON): Future[Unit] = {
+  def defineConstructor[T: ClassTag](constructor: () => T, scope: DIScope.value = DIScope.SINGLETON_EAGER): Future[Unit] = {
     val p = Promise[Unit]
     syncActor ! Add(key[T], DiElement(constructor, scope), p)
     p.future
@@ -39,7 +39,7 @@ package object di {
     val diElement = cache.get(k).getOrElse(throw new RuntimeException(s"No constructor found for $k"))
     val inst = diElement.scope match {
       case DIScope.PROTOTYPE => diElement.constructor.apply()
-      case DIScope.SINGLETON => {
+      case _: DIScope.value => {
         diElement.cachedInstance match {
           case Some(i) => i
           case None => {
@@ -57,8 +57,11 @@ package object di {
   private class SyncActor(c: HashMap[Class[_], DiElement]) extends Actor {
     override def receive: Receive = {
       case Add(k, v, p) => {
-        val m = c.put(k, v)
-        c.put(k, v)
+        val diElement = v.scope match {
+          case DIScope.SINGLETON_EAGER => v.copy(cachedInstance = Some(v.constructor.apply()))
+          case _ => v
+        }
+        c.put(k, diElement)
         p.success()
       }
       case AddSingleton(k, v) => {

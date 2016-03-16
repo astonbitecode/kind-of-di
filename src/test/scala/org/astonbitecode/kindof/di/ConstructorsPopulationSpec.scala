@@ -16,10 +16,11 @@ class ConstructorsPopulationSpec extends mutable.Specification with BeforeEach {
     TestUtil.clean
   }
 
-  "A spec for the Constructors population in the DI".txt
+  sequential
+
+  "A spec for the Constructors population in the DI ".txt
 
   "A constructor should be populated in the DI" >> {
-    cache must haveSize(0)
     val f = defineConstructor { () => MyInjectableClass("One") }
     Await.result(f, timeout)
     cache must haveSize(1)
@@ -32,6 +33,20 @@ class ConstructorsPopulationSpec extends mutable.Specification with BeforeEach {
     Await.result(f2, timeout)
     cache must haveSize(1)
     cache.head._2.constructor.apply().asInstanceOf[MyInjectableClass].id === "Two"
+  }
+
+  "A constructor with scope SINGLETON_EAGER should create the instance upon the call" >> {
+    val f = defineConstructor(() => MyInjectableClass("One"), DIScope.SINGLETON_EAGER)
+    Await.result(f, timeout)
+    cache must haveSize(1)
+    cache.head._2.cachedInstance.isDefined === true
+  }
+
+  "A constructor with scope SINGLETON_LAZY should not create the instance upon the call" >> {
+    val f = defineConstructor(() => MyInjectableClass("One"), DIScope.SINGLETON_LAZY)
+    Await.result(f, timeout)
+    cache must haveSize(1)
+    cache.head._2.cachedInstance.isDefined === false
   }
 
   case class MyInjectableClass(id: String)
