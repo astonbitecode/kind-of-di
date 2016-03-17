@@ -29,14 +29,24 @@ package object di {
 
   def inject[T: ClassTag](): T = {
     val k = key[T]
-    cache.get(k) match {
+    findDiElement(k) match {
       case Some(diElement) => getOrCreateInstance(k)
       case None => throw new RuntimeException(s"No constructor found for $k")
     }
   }
 
+  private def findDiElement(k: Class[_]): Option[DiElement] = {
+    val foundOpt = cache.find { kv =>
+      {
+        val (clazz, diElement) = (kv._1, kv._2)
+        k.isAssignableFrom(clazz)
+      }
+    }
+    foundOpt.fold(None: Option[DiElement])(m => Some(m._2))
+  }
+
   private[di] def getOrCreateInstance[T: ClassTag](k: Class[_]): T = {
-    val diElement = cache.get(k).getOrElse(throw new RuntimeException(s"No constructor found for $k"))
+    val diElement = findDiElement(k).getOrElse(throw new RuntimeException(s"No constructor found for $k"))
     val inst = diElement.scope match {
       case DIScope.PROTOTYPE => diElement.constructor.apply()
       case _: DIScope.value => {
