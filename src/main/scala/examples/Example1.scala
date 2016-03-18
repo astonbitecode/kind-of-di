@@ -1,7 +1,7 @@
 package examples
 
-import org.astonbitecode.kindof.di.diDefine
-import org.astonbitecode.kindof.di.inject
+import go.libre.abc.kindof.di.diDefine
+import go.libre.abc.kindof.di.inject
 
 object Example1 extends App {
   /*

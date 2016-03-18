@@ -1,4 +1,4 @@
-package org.astonbitecode.kindof.di
+package go.libre.abc.kindof.di
 
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.FiniteDuration

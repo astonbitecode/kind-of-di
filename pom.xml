@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.astonbitecode.scala</groupId>
+	<groupId>go.libre.abc.scala</groupId>
 	<artifactId>kind-of-di</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>kind-of-di</name>
 	<description>A kind of DI for Scala</description>
 
 	<properties>
-		<scala.version>2.11.6</scala.version>
+		<scala.version>2.11.7</scala.version>
 		<akka.version>2.4.2</akka.version>
 		<specs2.version>3.7</specs2.version>
 		<maven.surefire.version>2.19.1</maven.surefire.version>
