@@ -1,4 +1,4 @@
-# kind-of-di
+# kind-of-di [![Build Status](https://travis-ci.org/astonbitecode/kind-of-di.svg?branch=master)](https://travis-ci.org/astonbitecode/kind-of-di)
 
 This is a library that provides the means for simple Dependency Injection (DI) in Scala.
 
@@ -96,6 +96,5 @@ class MyClassWithPrototype {
 * Provide a Maven artifact
 * Provide a SBT plugin
 * Enrich this README and add wiki pages
-* Add to Travis CI
 * Implement DSL
 * Implement `init` hooks
