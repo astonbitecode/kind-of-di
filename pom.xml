@@ -6,6 +6,22 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>kind-of-di</name>
 	<description>A kind of DI for Scala</description>
+	<url>https://github.com/astonbitecode/kind-of-di</url>
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>astonbitecode</name>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git@github.com:astonbitecode/kind-of-di.git</connection>
+		<url>git@github.com:astonbitecode/kind-of-di.git</url>
+	</scm>
 
 	<properties>
 		<scala.version>2.11.7</scala.version>
