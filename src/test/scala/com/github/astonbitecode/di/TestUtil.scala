@@ -1,4 +1,4 @@
-package go.libre.abc.kindof.di
+package com.github.astonbitecode.di
 
 object TestUtil {
   def clean(): Unit = {

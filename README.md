@@ -15,7 +15,7 @@ In order for this to happen, the user code needs to provide information on _how_
 If you want a `HelpfulClass` of yours to be created once and get injected in other classes (like in [Spring](https://projects.spring.io/spring-framework/#quick-start)'s Singleton scope) you can do it with the following piece of code:
 
 ```
-import go.libre.abc.kindof.di._
+import com.github.astonbitecode.di._
 
 diDefine(() => new HelpfulClass())
 
@@ -30,7 +30,7 @@ The call to `diDefine` has to be done in an early phase _before_ any instantiati
 If you want the `HelpfulClass` from above to be injected into a Class of yours, you can do the following:
 
 ```
-import go.libre.abc.kindof.di._
+import com.github.astonbitecode.di._
 
 class MyClass {
   private val helpfulClass = inject[HelpfulClass]
@@ -94,7 +94,6 @@ class MyClassWithPrototype {
 ## Short TODO List
 
 * Provide a Maven artifact
-* Provide a SBT plugin
 * Enrich this README and add wiki pages
 * Implement DSL
 * Implement `init` hooks

@@ -1,4 +1,4 @@
-package go.libre.abc.kindof.di
+package com.github.astonbitecode.di
 
 object DIScope extends Enumeration {
   type value = Value

@@ -1,4 +1,4 @@
-package go.libre.abc.kindof
+package com.github.astonbitecode
 
 import scala.reflect.ClassTag
 import scala.collection.concurrent.{ Map, TrieMap }
@@ -6,7 +6,7 @@ import scala.collection.mutable.HashMap
 import akka.actor.Actor
 import akka.actor.ActorSystem
 import akka.actor.Props
-import go.libre.abc.kindof.di.DIScope;
+import com.github.astonbitecode.di.DIScope;
 import scala.concurrent.Promise
 import scala.concurrent.Future
 
