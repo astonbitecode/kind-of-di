@@ -1,6 +1,6 @@
 # kind-of-di [![Build Status](https://travis-ci.org/astonbitecode/kind-of-di.svg?branch=master)](https://travis-ci.org/astonbitecode/kind-of-di)
 
-This is a library that provides the means for simple Dependency Injection (DI) in Scala.
+This is a small library that provides the means for simple Dependency Injection (DI) in Scala.
 
 Its purpose is to help keeping the code clean and to make it easer to test; it is not to provide a full DI Framework.
 
