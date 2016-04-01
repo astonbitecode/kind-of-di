@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.astonbitecode</groupId>
 	<artifactId>kind-of-di</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>kind-of-di</name>
 	<description>A kind of DI for Scala</description>
 	<url>https://github.com/astonbitecode/kind-of-di</url>
