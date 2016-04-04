@@ -1,8 +1,15 @@
-# kind-of-di [![Build Status](https://travis-ci.org/astonbitecode/kind-of-di.svg?branch=master)](https://travis-ci.org/astonbitecode/kind-of-di)
+# kind-of-di [![Build Status](https://travis-ci.org/astonbitecode/kind-of-di.svg?branch=master)](https://travis-ci.org/astonbitecode/kind-of-di) [![Maven Central](https://img.shields.io/maven-central/v/org.apache.maven/apache-maven.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.astonbitecode%22%20AND%20a%3A%22kind-of-di%22)
 
-This is a small library that provides the means for simple Dependency Injection (DI) in Scala.
+This is a small library that helps in achieving simple Dependency Injection (DI) in Scala.
 
-Its purpose is to help keeping the code clean and to make it easer to test; it is not to provide a full DI Framework.
+Its purpose is _not_ to provide a full DI Framework, but to assist in keeping the code clean and easer to test.
+
+## Features
+
+* Separation of Objects' initialization and usage
+* No XML configuration needed. It is up to the developer to decide where, how and when the Objects' initialization is defined
+* Hooks upon Objects' creation, destruction, injection __(TODO)__
+
 
 ## Quick Start
 
@@ -93,7 +100,6 @@ class MyClassWithPrototype {
 
 ## Short TODO List
 
-* Provide a Maven artifact
 * Enrich this README and add wiki pages
 * Implement DSL
 * Implement `init` hooks
