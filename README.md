@@ -1,4 +1,4 @@
-# kind-of-di [![Build Status](https://travis-ci.org/astonbitecode/kind-of-di.svg?branch=master)](https://travis-ci.org/astonbitecode/kind-of-di) [![Maven Central](https://img.shields.io/maven-central/v/org.apache.maven/apache-maven.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.astonbitecode%22%20AND%20a%3A%22kind-of-di%22)
+# kind-of-di [![Build Status](https://travis-ci.org/astonbitecode/kind-of-di.svg?branch=master)](https://travis-ci.org/astonbitecode/kind-of-di) [![Maven Central](https://img.shields.io/badge/Maven%20Central-0.0.1-blue.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.astonbitecode%22%20AND%20a%3A%22kind-of-di%22)
 
 This is a small library that helps in achieving simple Dependency Injection (DI) in Scala.
 
